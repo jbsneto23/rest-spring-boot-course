@@ -1,14 +1,14 @@
 package br.com.jbsneto.services;
 
+import br.com.jbsneto.data.dto.v1.PersonDTO;
 import br.com.jbsneto.exceptions.ResourceNotFountException;
+import br.com.jbsneto.mapper.DozerMapper;
 import br.com.jbsneto.model.Person;
 import br.com.jbsneto.repositories.PersonRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicLong;
 import java.util.logging.Logger;
 
 @RequiredArgsConstructor
@@ -19,31 +19,33 @@ public class PersonServices {
 
     private final PersonRepository repository;
 
-    public Person findById(Long id) {
+    public PersonDTO findById(Long id) {
         logger.info("Finding one person");
-        return repository.findById(id)
+        var entity =  repository.findById(id)
                 .orElseThrow(() -> new ResourceNotFountException("No records found for this ID"));
+        return DozerMapper.parseObject(entity, PersonDTO.class);
     }
 
-    public List<Person> findAll() {
+    public List<PersonDTO> findAll() {
         logger.info("Finding all people");
-        return repository.findAll();
+        return DozerMapper.parseListObjects(repository.findAll(), PersonDTO.class);
     }
 
-    public Person create(Person person) {
+    public PersonDTO create(PersonDTO person) {
         logger.info("Creating onde person");
-        return repository.save(person);
+        var entity = DozerMapper.parseObject(person, Person.class);
+        return DozerMapper.parseObject(repository.save(entity), PersonDTO.class);
     }
 
-    public Person update(Person person) {
-        logger.info("Updating onde person");
+    public PersonDTO update(PersonDTO person) {
+        logger.info("Updating one person");
         Person entity = repository.findById(person.getId())
                 .orElseThrow(() -> new ResourceNotFountException("No records found for this ID"));
         entity.setFirstName(person.getFirstName());
         entity.setLastName(person.getLastName());
         entity.setAddress(person.getAddress());
         entity.setGender(person.getGender());
-        return repository.save(entity);
+        return DozerMapper.parseObject(repository.save(entity), PersonDTO.class);
     }
 
     public void delete(Long id) {
