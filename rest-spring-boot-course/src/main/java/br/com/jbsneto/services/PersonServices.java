@@ -1,10 +1,8 @@
 package br.com.jbsneto.services;
 
 import br.com.jbsneto.data.dto.v1.PersonDTO;
-import br.com.jbsneto.data.dto.v2.PersonDTOV2;
 import br.com.jbsneto.exceptions.ResourceNotFountException;
 import br.com.jbsneto.mapper.DozerMapper;
-import br.com.jbsneto.mapper.custom.PersonMapper;
 import br.com.jbsneto.model.Person;
 import br.com.jbsneto.repositories.PersonRepository;
 import lombok.RequiredArgsConstructor;
@@ -20,11 +18,10 @@ public class PersonServices {
     private Logger logger = Logger.getLogger(PersonServices.class.getName());
 
     private final PersonRepository repository;
-    private final PersonMapper personMapper;
 
     public PersonDTO findById(Long id) {
         logger.info("Finding one person");
-        var entity = repository.findById(id)
+        var entity =  repository.findById(id)
                 .orElseThrow(() -> new ResourceNotFountException("No records found for this ID"));
         return DozerMapper.parseObject(entity, PersonDTO.class);
     }
@@ -38,12 +35,6 @@ public class PersonServices {
         logger.info("Creating onde person");
         var entity = DozerMapper.parseObject(person, Person.class);
         return DozerMapper.parseObject(repository.save(entity), PersonDTO.class);
-    }
-
-    public PersonDTOV2 createV2(PersonDTOV2 person) {
-        logger.info("Creating onde person V2");
-        var entity = personMapper.converDTOTotEntity(person);
-        return personMapper.convertEntityToDTO(repository.save(entity));
     }
 
     public PersonDTO update(PersonDTO person) {
