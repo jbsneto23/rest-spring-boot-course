@@ -1,6 +1,7 @@
 package br.com.jbsneto.exceptions.handler;
 
 import br.com.jbsneto.exceptions.ExceptionResponse;
+import br.com.jbsneto.exceptions.RequiredObjectIsNullException;
 import br.com.jbsneto.exceptions.ResourceNotFountException;
 import br.com.jbsneto.exceptions.UnsupportedMathOperationException;
 import lombok.val;
@@ -41,6 +42,15 @@ public class CustomizedResponseEntityExceptionHandler extends ResponseEntityExce
                 ex.getMessage(),
                 request.getDescription(false));
         return new ResponseEntity<>(exceptionResponse, HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler(RequiredObjectIsNullException.class)
+    public final ResponseEntity<ExceptionResponse> handleRequiredObjectIsNullException(Exception ex, WebRequest request) {
+        val exceptionResponse = new ExceptionResponse(
+                new Date(),
+                ex.getMessage(),
+                request.getDescription(false));
+        return new ResponseEntity<>(exceptionResponse, HttpStatus.BAD_REQUEST);
     }
 
 }
