@@ -6,14 +6,15 @@ import lombok.Data;
 import org.springframework.hateoas.RepresentationModel;
 
 import java.io.Serializable;
+import java.util.Date;
 
 @Data
-public class PersonDTO extends RepresentationModel<PersonDTO> implements Serializable  {
+public class BookDTO extends RepresentationModel<PersonDTO> implements Serializable {
     @JsonProperty(value = "id", index = 0)
     @Mapping("id")
     private Long key;
-    private String firstName;
-    private String lastName;
-    private String address;
-    private String gender;
+    private String author;
+    private String title;
+    private Date launchDate;
+    private Double price;
 }
