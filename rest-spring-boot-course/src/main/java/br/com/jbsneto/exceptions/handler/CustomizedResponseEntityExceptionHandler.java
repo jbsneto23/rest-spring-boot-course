@@ -1,9 +1,6 @@
 package br.com.jbsneto.exceptions.handler;
 
-import br.com.jbsneto.exceptions.ExceptionResponse;
-import br.com.jbsneto.exceptions.RequiredObjectIsNullException;
-import br.com.jbsneto.exceptions.ResourceNotFountException;
-import br.com.jbsneto.exceptions.UnsupportedMathOperationException;
+import br.com.jbsneto.exceptions.*;
 import lombok.val;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -53,4 +50,12 @@ public class CustomizedResponseEntityExceptionHandler extends ResponseEntityExce
         return new ResponseEntity<>(exceptionResponse, HttpStatus.BAD_REQUEST);
     }
 
+    @ExceptionHandler(InvalidJwtAuthenticationException.class)
+    public final ResponseEntity<ExceptionResponse> handleInvalidJwtAuthenticationException(Exception ex, WebRequest request) {
+        val exceptionResponse = new ExceptionResponse(
+                new Date(),
+                ex.getMessage(),
+                request.getDescription(false));
+        return new ResponseEntity<>(exceptionResponse, HttpStatus.FORBIDDEN);
+    }
 }
