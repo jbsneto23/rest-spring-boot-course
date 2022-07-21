@@ -28,4 +28,6 @@ public class Person implements Serializable {
     @Column(nullable = false)
     private String gender;
 
+    @Column
+    private Boolean enabled;
 }

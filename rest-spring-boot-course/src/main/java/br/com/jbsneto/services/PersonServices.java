@@ -9,6 +9,8 @@ import br.com.jbsneto.model.Person;
 import br.com.jbsneto.repositories.PersonRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
@@ -69,6 +71,18 @@ public class PersonServices {
                 .orElseThrow(() -> new ResourceNotFountException("No records found for this ID"));
         repository.delete(entity);
     }
+
+    @Transactional
+    public PersonDTO disablePerson(Long id) {
+        logger.info("Disabling a person");
+        repository.disablePerson(id);
+        var entity =  repository.findById(id)
+                .orElseThrow(() -> new ResourceNotFountException("No records found for this ID"));
+        var dto = DozerMapper.parseObject(entity, PersonDTO.class);
+        dto.add(linkTo(methodOn(PersonController.class).findById(id)).withSelfRel());
+        return dto;
+    }
+
 
 
 }

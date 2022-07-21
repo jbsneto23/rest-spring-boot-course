@@ -103,6 +103,7 @@ public class PersonControllerYamlTest extends AbstractIntegrationTest {
         assertNotNull(createdPerson.getLastName());
         assertNotNull(createdPerson.getAddress());
         assertNotNull(createdPerson.getGender());
+        assertNotNull(createdPerson.getEnabled());
 
         assertTrue(createdPerson.getId() > 0);
 
@@ -110,6 +111,7 @@ public class PersonControllerYamlTest extends AbstractIntegrationTest {
         assertEquals("Stallman", createdPerson.getLastName());
         assertEquals("New York", createdPerson.getAddress());
         assertEquals("Male", createdPerson.getGender());
+        assertTrue(createdPerson.getEnabled());
     }
 
     @Test
@@ -135,6 +137,7 @@ public class PersonControllerYamlTest extends AbstractIntegrationTest {
         assertNotNull(persistedPerson.getLastName());
         assertNotNull(persistedPerson.getAddress());
         assertNotNull(persistedPerson.getGender());
+        assertNotNull(persistedPerson.getEnabled());
 
         assertTrue(persistedPerson.getId() > 0);
 
@@ -142,6 +145,7 @@ public class PersonControllerYamlTest extends AbstractIntegrationTest {
         assertEquals("Stallman", persistedPerson.getLastName());
         assertEquals("New York", persistedPerson.getAddress());
         assertEquals("Male", persistedPerson.getGender());
+        assertTrue(persistedPerson.getEnabled());
     }
 
     @Test
@@ -176,6 +180,7 @@ public class PersonControllerYamlTest extends AbstractIntegrationTest {
         assertNotNull(personInList.getLastName());
         assertNotNull(personInList.getAddress());
         assertNotNull(personInList.getGender());
+        assertNotNull(personInList.getEnabled());
 
         assertTrue(personInList.getId() == person.getId());
 
@@ -183,6 +188,7 @@ public class PersonControllerYamlTest extends AbstractIntegrationTest {
         assertEquals("Stallman", personInList.getLastName());
         assertEquals("New York", personInList.getAddress());
         assertEquals("Male", personInList.getGender());
+        assertTrue(personInList.getEnabled());
     }
 
     @Test
@@ -212,6 +218,7 @@ public class PersonControllerYamlTest extends AbstractIntegrationTest {
         assertNotNull(updatedPerson.getLastName());
         assertNotNull(updatedPerson.getAddress());
         assertNotNull(updatedPerson.getGender());
+        assertNotNull(updatedPerson.getEnabled());
 
         assertTrue(updatedPerson.getId() == expectedId);
 
@@ -219,10 +226,45 @@ public class PersonControllerYamlTest extends AbstractIntegrationTest {
         assertEquals("Stallman 2", updatedPerson.getLastName());
         assertEquals("New York 2", updatedPerson.getAddress());
         assertEquals("Male 2", updatedPerson.getGender());
+        assertTrue(updatedPerson.getEnabled());
     }
 
     @Test
     @Order(5)
+    void testDisablePerson() throws JsonProcessingException {
+        var persistedPerson = given()
+                .spec(specification)
+                .contentType(TestConfig.CONTENT_TYPE_YAML)
+                .accept(TestConfig.CONTENT_TYPE_YAML)
+                .header(TestConfig.HEADER_PARAM_ORIGIN, TestConfig.ORIGIN_TEST)
+                .pathParam("id", person.getId())
+                .when()
+                .patch("{id}")
+                .then()
+                .statusCode(200)
+                .extract()
+                .body()
+                .as(PersonDTO.class, objectMapper);
+
+        assertNotNull(persistedPerson);
+        assertNotNull(persistedPerson.getId());
+        assertNotNull(persistedPerson.getFirstName());
+        assertNotNull(persistedPerson.getLastName());
+        assertNotNull(persistedPerson.getAddress());
+        assertNotNull(persistedPerson.getGender());
+        assertNotNull(persistedPerson.getEnabled());
+
+        assertTrue(persistedPerson.getId() > 0);
+
+        assertEquals("Richard 2", persistedPerson.getFirstName());
+        assertEquals("Stallman 2", persistedPerson.getLastName());
+        assertEquals("New York 2", persistedPerson.getAddress());
+        assertEquals("Male 2", persistedPerson.getGender());
+        assertFalse(persistedPerson.getEnabled());
+    }
+
+    @Test
+    @Order(6)
     void testDelete() throws JsonProcessingException {
         given()
             .spec(specification)
@@ -237,7 +279,7 @@ public class PersonControllerYamlTest extends AbstractIntegrationTest {
     }
 
     @Test
-    @Order(6)
+    @Order(7)
     void testAllAfterDelete() throws JsonProcessingException {
         var peopleArray = given()
                 .spec(specification)
@@ -261,7 +303,7 @@ public class PersonControllerYamlTest extends AbstractIntegrationTest {
     }
 
     @Test
-    @Order(7)
+    @Order(8)
     void testAllWithoutToken() throws JsonProcessingException {
         var specificationWithoutAuthorization = new RequestSpecBuilder()
                 .setBasePath("/api/person/v1")
@@ -286,6 +328,7 @@ public class PersonControllerYamlTest extends AbstractIntegrationTest {
         person.setLastName("Stallman");
         person.setAddress("New York");
         person.setGender("Male");
+        person.setEnabled(true);
     }
 
     private void updateMockPerson() {

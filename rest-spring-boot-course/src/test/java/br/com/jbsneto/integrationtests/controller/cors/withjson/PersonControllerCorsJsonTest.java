@@ -32,7 +32,6 @@ public class PersonControllerCorsJsonTest extends AbstractIntegrationTest {
     public static void setUp() {
         objectMapper = new ObjectMapper();
         objectMapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
-
         person = new PersonDTO();
     }
 
@@ -91,6 +90,7 @@ public class PersonControllerCorsJsonTest extends AbstractIntegrationTest {
         assertNotNull(createdPerson.getLastName());
         assertNotNull(createdPerson.getAddress());
         assertNotNull(createdPerson.getGender());
+        assertNotNull(createdPerson.getEnabled());
 
         assertTrue(createdPerson.getId() > 0);
 
@@ -98,6 +98,7 @@ public class PersonControllerCorsJsonTest extends AbstractIntegrationTest {
         assertEquals("Stallman", createdPerson.getLastName());
         assertEquals("New York", createdPerson.getAddress());
         assertEquals("Male", createdPerson.getGender());
+        assertTrue(createdPerson.getEnabled());
     }
 
     @Test
@@ -148,6 +149,7 @@ public class PersonControllerCorsJsonTest extends AbstractIntegrationTest {
         assertNotNull(persistedPerson.getLastName());
         assertNotNull(persistedPerson.getAddress());
         assertNotNull(persistedPerson.getGender());
+        assertNotNull(persistedPerson.getEnabled());
 
         assertTrue(persistedPerson.getId() > 0);
 
@@ -155,6 +157,7 @@ public class PersonControllerCorsJsonTest extends AbstractIntegrationTest {
         assertEquals("Stallman", persistedPerson.getLastName());
         assertEquals("New York", persistedPerson.getAddress());
         assertEquals("Male", persistedPerson.getGender());
+        assertTrue(persistedPerson.getEnabled());
     }
 
     @Test
@@ -184,6 +187,7 @@ public class PersonControllerCorsJsonTest extends AbstractIntegrationTest {
         person.setLastName("Stallman");
         person.setAddress("New York");
         person.setGender("Male");
+        person.setEnabled(true);
     }
 
 }
