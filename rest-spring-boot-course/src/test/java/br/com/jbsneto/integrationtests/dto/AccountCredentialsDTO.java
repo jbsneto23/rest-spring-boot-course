@@ -11,10 +11,7 @@ import java.io.Serializable;
 @AllArgsConstructor
 @Data
 @XmlRootElement
-public class PersonDTO implements Serializable  {
-    private Long id;
-    private String firstName;
-    private String lastName;
-    private String address;
-    private String gender;
+public class AccountCredentialsDTO implements Serializable {
+    private String username;
+    private String password;
 }

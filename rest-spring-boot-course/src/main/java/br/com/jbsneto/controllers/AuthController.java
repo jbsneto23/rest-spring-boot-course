@@ -2,6 +2,7 @@ package br.com.jbsneto.controllers;
 
 import br.com.jbsneto.data.dto.v1.security.AccountCredentialsDTO;
 import br.com.jbsneto.services.AuthServices;
+import br.com.jbsneto.util.MediaType;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
@@ -19,7 +20,9 @@ public class AuthController {
 
     @SuppressWarnings("rawtypes")
     @Operation(summary = "Authenticates an user and returns a token")
-    @PostMapping(value = "/signin")
+    @PostMapping(value = "/signin",
+            consumes = { MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML, MediaType.APPLICATION_YAML },
+            produces = { MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML, MediaType.APPLICATION_YAML })
     public ResponseEntity signin(@RequestBody AccountCredentialsDTO dto) {
         if (checkIfAccountCredentialsDTOIsInvalid(dto)) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Invalid client request!");
@@ -33,7 +36,9 @@ public class AuthController {
 
     @SuppressWarnings("rawtypes")
     @Operation(summary = "Refresh token for authenticated user and returns a token")
-    @PutMapping(value = "/refresh/{username}")
+    @PutMapping(value = "/refresh/{username}",
+            consumes = { MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML, MediaType.APPLICATION_YAML },
+            produces = { MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML, MediaType.APPLICATION_YAML })
     public ResponseEntity refreshToken(@PathVariable("username") String username, @RequestHeader("Authorization") String refreshToken) {
         if (checkIfUsernameAndRefreshTokenAreNull(username, refreshToken)) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Invalid client request!");

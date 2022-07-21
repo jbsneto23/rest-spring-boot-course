@@ -6,15 +6,16 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
+import java.util.Date;
 
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
 @XmlRootElement
-public class PersonDTO implements Serializable  {
+public class BookDTO implements Serializable {
     private Long id;
-    private String firstName;
-    private String lastName;
-    private String address;
-    private String gender;
+    private String author;
+    private String title;
+    private Date launchDate;
+    private Double price;
 }
